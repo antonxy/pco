@@ -188,14 +188,14 @@ class Camera(object):
         self.sdk.arm_camera()
 
     # -------------------------------------------------------------------------
-    def record(self, number_of_images=1, mode='sequence'):
+    def record(self, number_of_images=1, mode='sequence', memory_mode='memory'):
         """
         Generates and configures a new Recorder instance.
 
         :param number_of_images: Number of images allocated in the driver. The
                                  RAM of the PC is limiting the maximum value.
         :type number_of_images: int
-        :paran mode: Mode of the Recorder
+        :param mode: Mode of the Recorder
             * 'sequence' - function is blocking while the number of images are
                            recorded. Recorder stops the recording when the
                            maximum number of images is reached.
@@ -209,6 +209,11 @@ class Camera(object):
             * 'fifo' - function is non blocking. Status must be checked before
                        reading the image.
         :type mode: string
+        :param memory_mode: Memory mode of the recorder
+            * 'memory' - Images are recorded directly to PC memory.
+                         Frames might be dropped if the transfer speed is too low.
+            * 'camram' - Images are recorded into camera ram first. (not available on all cameras)
+        :type memory_mode: string
 
         >>> record()
 
@@ -257,7 +262,7 @@ class Camera(object):
         else:
             raise ValueError
 
-        m = self.rec.create('camram')['maximum available images']
+        m = self.rec.create(memory_mode)['maximum available images']
         if m >= number_of_images:
             self.__number_of_images = number_of_images
         else:

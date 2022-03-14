@@ -43,6 +43,7 @@ class recorder:
         os.chdir(current_working_directory)
 
         self.recorder_handle = C.c_void_p(0)
+        self.memory_mode = None
         self.camera_handle = camera_handle
         self.sdk = sdk
 
@@ -141,6 +142,7 @@ class recorder:
                                                          C.c_char,
                                                          C.POINTER(C.c_uint32)]
 
+        self.memory_mode = mode
         recorder_mode = {'file': 1, 'memory': 2, 'camram': 3}
 
         dwImgDistributionArr = C.c_uint32(1)
@@ -208,13 +210,15 @@ class recorder:
         wNoOverwrite = C.c_uint16(0)
         szFilePath = 'C:/'
         pszFilePath = C.cast(szFilePath,  C.c_char_p)
-        wRamSegmentArr = C.POINTER(C.c_uint16)()#C.c_uint16()
+        wRamSegmentArr = C.POINTER(C.c_uint16)()
 
         recorder_mode_file = {'tif': 1, 'multitif': 2, 'pcoraw': 3, 'b16': 4}
         recorder_mode_memory = {'sequence': 1, 'ring buffer': 2, 'fifo': 3}
         recorder_mode_camram = {'sequential': 1, 'single image': 2}
 
-        wType = recorder_mode_memory[recorder_type]
+        recorder_mode = {'file': recorder_mode_file, 'memory': recorder_mode_memory, 'camram': recorder_mode_camram}
+
+        wType = recorder_mode[self.memory_mode][recorder_type]
 
         start_time = time.time()
         error = self.PCO_Recorder.PCO_RecorderInit(self.recorder_handle,
