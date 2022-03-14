@@ -257,7 +257,7 @@ class Camera(object):
         else:
             raise ValueError
 
-        m = self.rec.create('memory')['maximum available images']
+        m = self.rec.create('camram')['maximum available images']
         if m >= number_of_images:
             self.__number_of_images = number_of_images
         else:

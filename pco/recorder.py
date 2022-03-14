@@ -208,7 +208,7 @@ class recorder:
         wNoOverwrite = C.c_uint16(0)
         szFilePath = 'C:/'
         pszFilePath = C.cast(szFilePath,  C.c_char_p)
-        wRamSegmentArr = C.c_uint16()
+        wRamSegmentArr = C.POINTER(C.c_uint16)()#C.c_uint16()
 
         recorder_mode_file = {'tif': 1, 'multitif': 2, 'pcoraw': 3, 'b16': 4}
         recorder_mode_memory = {'sequence': 1, 'ring buffer': 2, 'fifo': 3}
